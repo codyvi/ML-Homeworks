@@ -77,7 +77,7 @@ class LinearRegressor():
 
             # delta/update rule
             # self.theta = ...
-            self.theta = self.theta - self.alpha * 
+            self.theta = self.theta - self.alpha * gradient
 
             self.costs.append(cost)
             pass
