@@ -30,7 +30,7 @@ class LinearRegressor():
         """
         # * is element wise multiplication
         # numpy.dot(), or @ operator will work
-        emptyResult = np.dot(self.theta, X)
+        emptyResult = np.dot(self.theta.T,X)
         return emptyResult
 
     def _cost_function_derivative(self, y_pred, y, X, m):
@@ -43,9 +43,9 @@ class LinearRegressor():
 
         TODO: You must implement the calculation of derivatives. An (n x 1) array that corresponds to the gradient of current theta values (the derivative per theta parameter) must be returned.
         """
-        empty_derivatives = np.zeros((X.shape[0],1))
-        derivatives =  np.sum((y_pred-y)*X)/(m)
-        empty_derivatives = self.theta - self.alpha * derivatives
+
+        derivatives = np.dot((y_pred - y),X.T) 
+        empty_derivatives = (self.alpha/m) * derivatives.T 
         return empty_derivatives
 
     def fit(self, X, y):
@@ -64,20 +64,17 @@ class LinearRegressor():
 
         for i in range(self.epochs):
             # Get predictions
-            y_pred = hypothesis(X)
+            y_pred = self._hypothesis(X)
 
             # calculate cost
-            # cost = ...
-            cost = _cost_function(y_pred, y, m)
+            cost = self._cost_function(y_pred, y, m)
             
 
             # gradient is an (n) x 1 array, it refers to the derivate per theta
-            # gradient = ...
-            gradient = _cost_function_derivative(y_pred, y, X, m)
+            gradient = self._cost_function_derivative(y_pred, y, X, m)
 
             # delta/update rule
-            # self.theta = ...
-            self.theta = self.theta - self.alpha * gradient
+            self.theta = self.theta - gradient
 
             self.costs.append(cost)
             pass
@@ -95,5 +92,5 @@ class LinearRegressor():
 
         # ! You could simply call the hypothesis here
         #empty_predictions = np.zeros((1,X.shape[1]))
-        empty_predictions = hypothesis(X)
+        empty_predictions = self._hypothesis(X)
         return empty_predictions
