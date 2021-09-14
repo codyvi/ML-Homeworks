@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class LogisticRegressor():
     def __init__(self, alpha=0.1, epochs=1, regularize=False, reg_factor=0.1):
         """
@@ -29,16 +28,21 @@ class LogisticRegressor():
         This returns an scalar
         """
         m = len(y)
+        #print(m)
 
         # Cost Function Without regularization
         # -1/m [Sum(y^i * log(h0(x^i)) + (1 - y^i) * log(1-h0(x^i)))]
         
-        cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp))
- 
+        #cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp))
+        #cost = -(1/m) * np.dot(y.T, np.log(hyp)) + np.dot(1-y, np.log(1 - hyp))
+
+        cost = -(1/m) * np.sum(np.dot(y.T, np.log(hyp)) + np.dot((1-y).T, np.log(1 - hyp)))
+
         if self.regularize:
-            cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp)) + self.reg_factor/(2 * m) * np.sum(self.theta ** 2) 
-        # Cost Function With regularization
-        # -1/m [Sum(y^i * log(h0(x^i)) + (1 - y^i) * log(1-h0(x^i)))] + Lambda/2m Sum(Theta^2)
+            #cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp)) + self.reg_factor/(2 * m) * np.sum(self.theta ** 2) 
+            cost = -(1/m) * np.sum(np.dot(y.T, np.log(hyp)) + np.dot((1-y).T, np.log(1 - hyp))) + (self.reg_factor / (2 * m)) * np.sum(self.theta ** 2)  
+            # Cost Function With regularization
+            # -1/m [Sum(y^i * log(h0(x^i)) + (1 - y^i) * log(1-h0(x^i)))] + (Lambda/2m) * Sum(Theta^2)
 
         return cost
 
@@ -55,13 +59,13 @@ class LogisticRegressor():
         Your implementation must support regularization, so you will have two cases here, one for when regularization is requested and another one for when it is not.
 
         """
-        #regulizarization?
-        #derivatives = np.dot((y_pred - y),X.T) 
-        #empty_derivatives = (self.alpha/m) * derivatives.T 
-        #return empty_derivatives + (self.reg_factor / m) ???
-        
-        d = (1/m)*np.sum(self._hypothesis(X))
-        empty_derivatives = np.zeros((X.shape[0], 1))
+        derivatives = np.dot((y_pred - y),X.T)
+        empty_derivatives = (self.alpha/m) * derivatives.T 
+
+        if self.regularize:
+            derivatives = np.dot((y_pred - y),X.T)
+            empty_derivatives = ((self.alpha/m) * derivatives.T) + np.sum((self.reg_factor / m) * self.theta)
+
         return empty_derivatives
 
     def _hypothesis(self, X):
@@ -73,7 +77,8 @@ class LogisticRegressor():
         """
         
         #emptyResult = np.zeros((1, X.shape[1]))
-        emptyResult = 1/1+np.exp(np.dot(-self.theta.T,X))
+        z = np.dot(self.theta.T,X)
+        emptyResult = 1/(1+np.exp(-z))
         return emptyResult
 
     def fit(self, X, y):
@@ -94,17 +99,21 @@ class LogisticRegressor():
         for i in range(self.epochs):
             # Get predictions
             # hyp = ...   # hyp is (1xm) vector
+            hyp = self._hypothesis(X)
 
             # Calculate cost
             # cost = ...      # cost is a scalar
-            cost = 0
+            cost = self._cost_function(hyp, y)
 
             # get gradient, an (nx1) array
             # gradient = ...
-            
+            gradient = self._cost_function_derivative(hyp, y, X, m)
             # delta/update rule
             # self.theta = ...
+            self.theta = self.theta - gradient
+
             self.costs.append(cost)
+            pass
 
         print("Final theta is {} (cost: {})".format(self.theta.T, cost))
 
