@@ -55,6 +55,12 @@ class LogisticRegressor():
         Your implementation must support regularization, so you will have two cases here, one for when regularization is requested and another one for when it is not.
 
         """
+        #regulizarization?
+        #derivatives = np.dot((y_pred - y),X.T) 
+        #empty_derivatives = (self.alpha/m) * derivatives.T 
+        #return empty_derivatives + (self.reg_factor / m) ???
+        
+        d = (1/m)*np.sum(self._hypothesis(X))
         empty_derivatives = np.zeros((X.shape[0], 1))
         return empty_derivatives
 
