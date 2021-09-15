@@ -1,7 +1,7 @@
 import numpy as np
 
 class LogisticRegressor():
-    def __init__(self, alpha=0.1, epochs=1, regularize=False, reg_factor=0.1):
+    def __init__(self, alpha=0.1, epochs=1, regularize=False, reg_factor=0.0001):
         """
         Constructor
 
@@ -40,7 +40,7 @@ class LogisticRegressor():
 
         if self.regularize:
             #cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp)) + self.reg_factor/(2 * m) * np.sum(self.theta ** 2) 
-            cost = -(1/m) * np.sum(np.dot(y.T, np.log(hyp)) + np.dot((1-y).T, np.log(1 - hyp))) + (self.reg_factor / (2 * m)) * np.sum(self.theta ** 2)  
+            cost +=   (self.reg_factor / (2 * m)) * np.sum(self.theta ** 2)  
             # Cost Function With regularization
             # -1/m [Sum(y^i * log(h0(x^i)) + (1 - y^i) * log(1-h0(x^i)))] + (Lambda/2m) * Sum(Theta^2)
 
