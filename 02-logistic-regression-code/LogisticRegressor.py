@@ -36,8 +36,7 @@ class LogisticRegressor():
         cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp))
 
         if self.regularize:
-            #cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp)) + self.reg_factor/(2 * m) * np.sum(self.theta ** 2) 
-            cost += [(self.reg_factor / (2 * m)) * np.sum(self.theta[1:]**2)] 
+            cost += (self.reg_factor / (2 * m)) * np.sum(self.theta[1:] ** 2)  #np.sum(np.dot(self.theta, self.theta.T))
             # Cost Function With regularization
             # -1/m [Sum(y^i * log(h0(x^i)) + (1 - y^i) * log(1-h0(x^i)))] + (Lambda/2m) * Sum(Theta^2)
 
@@ -57,13 +56,12 @@ class LogisticRegressor():
 
         """
         derivatives = np.dot((y_pred - y),X.T)
-        empty_derivatives = (self.alpha/m) * derivatives.T 
+        cost_derivatives = (1/m) * derivatives.T 
 
         if self.regularize:
-            derivatives = np.dot((y_pred - y),X.T)
-            empty_derivatives = ((self.alpha/m) * derivatives.T) + np.sum((self.reg_factor / m) * self.theta)
+            cost_derivatives += np.sum((self.reg_factor / m) * self.theta)
 
-        return empty_derivatives
+        return cost_derivatives
 
     def _hypothesis(self, X):
         """
@@ -107,7 +105,7 @@ class LogisticRegressor():
             gradient = self._cost_function_derivative(hyp, y, X, m)
             # delta/update rule
             # self.theta = ...
-            self.theta = self.theta - gradient
+            self.theta = self.theta - self.alpha * gradient
 
             self.costs.append(cost)
             pass
