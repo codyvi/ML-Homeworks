@@ -57,9 +57,11 @@ class LogisticRegressor():
         """
         derivatives = np.dot((y_pred - y),X.T)
         cost_derivatives = (1/m) * derivatives.T 
+        
 
         if self.regularize:
-            cost_derivatives += np.sum((self.reg_factor / m) * self.theta)
+            cost_derivatives[1:] = cost_derivatives[1:] + (self.reg_factor / m) * self.theta[1:]
+            #cost_derivatives -= (self.reg_factor / m) * self.theta[0]
 
         return cost_derivatives
 
