@@ -1,3 +1,10 @@
+"""
+Luis Alberto Manríquez Valle A01242473
+David Alonso Cantú Martínez A00822455
+Moisés Fernández Zárate A01197049
+Víctor Andrés Villarreal Grimaldo A01039863
+"""
+
 import numpy as np
 
 class LogisticRegressor():
