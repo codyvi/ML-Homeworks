@@ -91,9 +91,6 @@ class NeuralNetwork:
         # -- Make use of this class' activation function (which is linked to your implemented sigmoid)
         # Recall that the self.activations (a list of numpy arrays) is already configured to hold these values.
         #! DO NOT MODIFY THE FIRST POSITION AT EACH ACTIVATION LAYER, as we know it is the bias unit and it should be left equals to 1.
-        #print(self.activations)
-        #print(self.theta)
-        #print(self.hidden_layers)
         for i in range(0, len(self.hidden_layers)+1):
             newZ = self._z(self.activations[i], self.theta[i])
             if i == len(self.hidden_layers):
