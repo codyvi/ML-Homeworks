@@ -22,7 +22,7 @@ class NeuralNetwork:
         Calculates the sigmoid for the elements in the array z
         TODO: Implement the sigmoid function over the specified array z. The output should be of the same dimensions as z
         """
-        empty_z = 1/(1+np.exp(-z))
+        empty_z = 1.0/(1.0+np.exp(-z))
         return empty_z
 
     def _z(self, input, theta):
@@ -84,11 +84,18 @@ class NeuralNetwork:
         # -- Make use of this class' activation function (which is linked to your implemented sigmoid)
         # Recall that the self.activations (a list of numpy arrays) is already configured to hold these values.
         #! DO NOT MODIFY THE FIRST POSITION AT EACH ACTIVATION LAYER, as we know it is the bias unit and it should be left equals to 1.
-
+        #print(self.activations)
+        #print(self.theta)
+        #print(self.hidden_layers)
+        for i in range(0, len(self.hidden_layers)+1):
+            newZ = self._z(self.activations[i], self.theta[i])
+            if i == len(self.hidden_layers):
+                self.activations[i+1] = self._activation(newZ)
+            else:
+                self.activations[i+1][1:] = self._activation(newZ)
         #Obtener z y calcular activación (sigmoid)
         #self.activations[capa-1], self.theta
         #self.activations[capa][1:]
-        pass
 
     def predict(self, X):
         """
@@ -105,4 +112,5 @@ class NeuralNetwork:
         # --   the numpy array that corresponds to the activations in the output layer
         # --   remember that the list of activations is in self.activations
         self._forward()
+
         return self.activations[-1]
