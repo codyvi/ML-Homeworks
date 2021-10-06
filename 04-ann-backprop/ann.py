@@ -1,3 +1,10 @@
+"""
+Luis Alberto Manríquez Valle A01242473
+David Alonso Cantú Martínez A00822455
+Moisés Fernández Zárate A01197049
+Víctor Andrés Villarreal Grimaldo A01039863
+"""
+
 from utils import create_structure_for_ann
 import numpy as np
 
@@ -109,12 +116,12 @@ class NeuralNetwork:
         # - Some code and comments are provided here as a starting point, but you can delete it and use your own
         
         
-        # m = y.shape[1]
-        # delta = []
+        m = y.shape[1]
+        delta = []
 
         # calculate the error in output layer and append it to delta
-        # delta_i = something
-        # delta.append(delta_i)
+        delta_i = y - self.activations[-1]
+        delta.append(delta_i)
 
         # Iterate backwards for each layer, we stop at layer 1 (excluding it)
         # for each layer going backwards:
@@ -163,7 +170,22 @@ class NeuralNetwork:
         # - the predictions (y_pred in previous assignments) are in the activations of last layer, you can access them via self.activations
         # - you can get the value of m (number of examples) from the y parameter
         # - do not forget: We do not regularize the bias units weights
-        return 0
+        m = y.shape[1]
+        y_pred = (self.activations[-1]).T
+
+        cost_log = np.log(y_pred) @ y
+        cost_log2 = np.log(1 - y_pred) @ (1 - y)
+
+        res = (-1/m) * np.sum(cost_log + cost_log2)
+
+        reg = 0
+        for layer in self.theta:
+            biasless = layer[:, 1:]
+            temp = biasless @ biasless.T
+            reg += np.sum(temp)
+
+        res += (self.regularization_rate / (2 * m)) * reg
+        return res
 
     def fit(self, X, y, initialTheta=None):
         """
