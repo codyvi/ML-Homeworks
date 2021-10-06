@@ -17,7 +17,7 @@ class LogisticRegressor():
         self.costs = []
         self.theta = None
 
-    def _cost_function(self, hyp, y):
+    def _cost_function(self, hyp, y, m):
         """
         Calculates the cost function (error) for the predicted values (hyp) when compared against the right labels (y).
         hyp: the values predicted by the current configuration of the LR
@@ -27,16 +27,15 @@ class LogisticRegressor():
         Recall that the LR might be set to perform regularization, so you must have two cases: one for when regularization is required and one for when it is not.
         This returns an scalar
         """
-        m = len(y)
-        #print(m)
+        #m = len(y)
 
         # Cost Function Without regularization
         # -1/m [Sum(y^i * log(h0(x^i)) + (1 - y^i) * log(1-h0(x^i)))]
-        
+
         cost = -1/m * np.sum(y * np.log(hyp) + (1 - y) * np.log(1 - hyp))
 
         if self.regularize:
-            cost += (self.reg_factor / (2 * m)) * np.sum(self.theta[1:] ** 2)  #np.sum(np.dot(self.theta, self.theta.T))
+            cost += (self.reg_factor / (2 * m)) * np.sum(self.theta[1:, :] ** 2)  #np.sum(np.dot(self.theta, self.theta.T))
             # Cost Function With regularization
             # -1/m [Sum(y^i * log(h0(x^i)) + (1 - y^i) * log(1-h0(x^i)))] + (Lambda/2m) * Sum(Theta^2)
 
@@ -55,12 +54,20 @@ class LogisticRegressor():
         Your implementation must support regularization, so you will have two cases here, one for when regularization is requested and another one for when it is not.
 
         """
+
         derivatives = np.dot((y_pred - y),X.T)
         cost_derivatives = (1/m) * derivatives.T 
         
 
         if self.regularize:
-            cost_derivatives[1:] = cost_derivatives[1:] + (self.reg_factor / m) * self.theta[1:]
+            derivatives = np.dot((y_pred - y),X[0,:].T)
+            cost_derivatives = (1/m) * derivatives.T 
+
+            derivatives = np.dot((y_pred - y),X[1:,:].T)
+            cost_derivatives2 = (1/m) * derivatives.T 
+            cost_derivatives2 +=  (self.reg_factor / m) * self.theta[1:, :]
+            cost_derivatives = np.append(np.array([cost_derivatives]), cost_derivatives2)
+            cost_derivatives = np.reshape(cost_derivatives, (len(cost_derivatives),-1))
             #cost_derivatives -= (self.reg_factor / m) * self.theta[0]
 
         return cost_derivatives
@@ -88,8 +95,11 @@ class LogisticRegressor():
         """
 
         # m is the number of samples, n is the number of features, y is (1 x m)
-        n, m = X.shape[0], X.shape[1]
+        #print(X)
 
+        n, m = X.shape[0], X.shape[1]
+        print(m)
+        
         # self.theta is an (n x 1) vector (one per feature)
         self.theta = np.random.uniform(-10, 10, (n, 1))
 
@@ -100,7 +110,7 @@ class LogisticRegressor():
 
             # Calculate cost
             # cost = ...      # cost is a scalar
-            cost = self._cost_function(hyp, y)
+            cost = self._cost_function(hyp, y, m)
 
             # get gradient, an (nx1) array
             # gradient = ...
