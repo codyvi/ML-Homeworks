@@ -120,7 +120,7 @@ class NeuralNetwork:
         delta = []
 
         # calculate the error in output layer and append it to delta
-        delta_i = y - self.activations[-1]
+        delta_i =  self.activations[-1] - y;
         delta.append(delta_i)
 
         # Iterate backwards for each layer, we stop at layer 1 (excluding it)
@@ -129,16 +129,24 @@ class NeuralNetwork:
         #   multiply the previous together and also by the sigmoid derivative
         #     (that is a * (1 - a), you must select the correct activations here)
         #   at this point you got the deltas for this layer, appendit to delta list
-        
+        for i in range(len(self.hidden_layers), 0, -1):
+            theta = self.theta[i]
+            error = delta[-1]
+            d = delta[-1]*theta.T*self.activation[i]*(1.0-self.activation[i])
+            delta.append(d)
 
+
+        delta.reverse()
         # Create your Delta Δ matrix
-        # Delta = create_structure_for_ann(self)
+        Delta_Mat = create_structure_for_ann(self)
         # Compute Δ = Δ + activations*delta_next_layer
-        
+        for i in range(len(self.hidden_layers)):
+            # Delta_Mat[i] = self.activation[i].T * delta[i+1]
 
         # Create matrix D from Δ matrix, there is some regularization here
-
+        
         # Use D for gradient descent's update rule, no update for weights from bias units to match PDF results
+        
         pass
 
     def predict(self, X):
