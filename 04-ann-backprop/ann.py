@@ -151,7 +151,7 @@ class NeuralNetwork:
             Delta_Mat[i] = Delta_Mat[i] + self.activations[i].T * delta[i+1]
 
         # Create matrix D from Δ matrix, there is some regularization here
-        
+        # D = (1/m) * Delta_Mat
         # Use D for gradient descent's update rule, no update for weights from bias units to match PDF results
 
         pass
