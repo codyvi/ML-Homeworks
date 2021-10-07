@@ -132,7 +132,13 @@ class NeuralNetwork:
         for i in range(len(self.hidden_layers), 0, -1):
             theta = self.theta[i]
             error = delta[-1]
-            d = delta[-1]*theta.T*self.activation[i]*(1.0-self.activation[i])
+            #d = theta.T * error
+            d = np.dot(theta.T, error)
+            #d = np.dot(error, theta.T)
+
+
+            d = d*self.activations[i]
+            d = d*(1.0-self.activations[i])
             delta.append(d)
 
 
@@ -140,13 +146,14 @@ class NeuralNetwork:
         # Create your Delta Δ matrix
         Delta_Mat = create_structure_for_ann(self)
         # Compute Δ = Δ + activations*delta_next_layer
+        # print(Delta_Mat[l][i][j])
         for i in range(len(self.hidden_layers)):
-            # Delta_Mat[i] = self.activation[i].T * delta[i+1]
+            Delta_Mat[i] = Delta_Mat[i] + self.activations[i].T * delta[i+1]
 
         # Create matrix D from Δ matrix, there is some regularization here
         
         # Use D for gradient descent's update rule, no update for weights from bias units to match PDF results
-        
+
         pass
 
     def predict(self, X):
