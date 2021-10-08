@@ -130,15 +130,15 @@ class NeuralNetwork:
         #     (that is a * (1 - a), you must select the correct activations here)
         #   at this point you got the deltas for this layer, appendit to delta list
         for i in range(len(self.hidden_layers), 0, -1):
-            theta = self.theta[i]
+            theta = self.theta[i][:,1:]
             error = delta[-1]
             #d = theta.T * error
             d = np.dot(theta.T, error)
             #d = np.dot(error, theta.T)
 
 
-            d = d*self.activations[i]
-            d = d*(1.0-self.activations[i])
+            d = d*self.activations[i][1:]
+            d = d*(1.0-self.activations[i][1:])
             delta.append(d)
 
 
@@ -148,10 +148,11 @@ class NeuralNetwork:
         # Compute Δ = Δ + activations*delta_next_layer
         # print(Delta_Mat[l][i][j])
         for i in range(len(self.hidden_layers)):
-            Delta_Mat[i] = Delta_Mat[i] + self.activations[i].T * delta[i+1]
+            Delta_Mat[i][:,1:] = np.dot(self.activations[i][1:].T,delta[i+1])
 
         # Create matrix D from Δ matrix, there is some regularization here
-        # D = (1/m) * Delta_Mat
+        # D = (1/m) * Delta_Mat 
+        # Notación [x**2 for x in lista ]
         # Use D for gradient descent's update rule, no update for weights from bias units to match PDF results
 
         pass
