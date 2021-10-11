@@ -120,7 +120,7 @@ class NeuralNetwork:
         delta = []
 
         # calculate the error in output layer and append it to delta
-        delta_i =  self.activations[-1][1:] - y;
+        delta_i =  self.activations[-1] - y;
         delta.append(delta_i)
 
         # Iterate backwards for each layer, we stop at layer 1 (excluding it)
@@ -146,22 +146,22 @@ class NeuralNetwork:
         # Create your Delta Δ matrix
         Delta_Mat = create_structure_for_ann(self)
         # Compute Δ = Δ + activations*delta_next_layer
-        for i in range(len(self.hidden_layers)):
-            res = np.dot(delta[i+1], self.activations[i][1:].T)
-            Delta_Mat[i][:,1:] = res
+        for i in reversed(range(len(Delta_Mat))):
+            res = np.dot(self.activations[i][1:], delta[i].T)
+            Delta_Mat[i][:,1:] = res.T
+        
         # Create matrix D from Δ matrix, there is some regularization here
         D = []
-        for i in range(len(self.hidden_layers)):
+        for i in range(len(Delta_Mat)):
             if(self.regularization_rate == 0.0):
-                D.append((1.0/m) * Delta_Mat[i][:,1:])  
+                D.append((Delta_Mat[i]/m))  
             else:
-                D.append((1.0/m) * Delta_Mat[i][:,1:] + self.regularization_rate*self.theta[i][:,1:])
-
+                D.append((Delta_Mat[i]/m) + self.regularization_rate*self.theta[i])
         
         # Notación [x**2 for x in lista ]
         # Use D for gradient descent's update rule, no update for weights from bias units to match PDF results
-        for i in range(len(self.hidden_layers)):
-            self.theta[i][:,1:] = self.theta[i][:,1:] - self.learning_rate * D[i]
+        for i in range(len(self.theta)):
+            self.theta[i][:,1:] = self.theta[i][:,1:] - self.learning_rate * D[i][:, 1:]
 
 
     def predict(self, X):
