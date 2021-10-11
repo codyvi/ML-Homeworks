@@ -120,7 +120,7 @@ class NeuralNetwork:
         delta = []
 
         # calculate the error in output layer and append it to delta
-        delta_i =  self.activations[-1] - y;
+        delta_i =  self.activations[-1] - y
         delta.append(delta_i)
 
         # Iterate backwards for each layer, we stop at layer 1 (excluding it)
@@ -196,15 +196,15 @@ class NeuralNetwork:
         m = y.shape[1]
         y_pred = (self.activations[-1]).T
 
-        cost_log = np.log(y_pred) @ y
-        cost_log2 = np.log(1 - y_pred) @ (1 - y)
+        cost_log = np.dot(np.log(y_pred),y)
+        cost_log2 = np.dot(np.log(1 - y_pred),(1 - y))
 
         res = (-1/m) * np.sum(cost_log + cost_log2)
 
         reg = 0
-        for layer in self.theta:
-            biasless = layer[:, 1:]
-            temp = biasless @ biasless.T
+        for i in self.theta:
+            mp = i[:, 1:]
+            temp = np.dot(mp, mp.T)
             reg += np.sum(temp)
 
         res += (self.regularization_rate / (2 * m)) * reg
