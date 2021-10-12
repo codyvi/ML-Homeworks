@@ -120,7 +120,7 @@ class NeuralNetwork:
         delta = []
 
         # calculate the error in output layer and append it to delta
-        delta_i =  self.activations[-1][1:] - y;
+        delta_i =  self.activations[-1] - y;
         delta.append(delta_i)
 
         # Iterate backwards for each layer, we stop at layer 1 (excluding it)
@@ -152,6 +152,7 @@ class NeuralNetwork:
         # Create matrix D from Δ matrix, there is some regularization here
         D = []
         for i in range(len(self.hidden_layers)):
+            print(self.regularization_rate)
             if(self.regularization_rate == 0.0):
                 D.append((1.0/m) * Delta_Mat[i][:,1:])  
             else:
