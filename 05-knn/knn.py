@@ -1,5 +1,4 @@
 
-from typing import Counter
 import numpy as np
 from collections import Counter
 
@@ -48,5 +47,7 @@ class Knn:
         # In self.model_y you will have the list of the classes for examples in original dataset (self.model_x). self.model_y is of shape 1xm
         x = self.get_neighbors(example)
         k_nearest_labels = [self.model_y[0][i] for i in x]
-        print(k_nearest_labels)
-        return 0
+        most_common = Counter(k_nearest_labels[0]).most_common(1)
+        print(k_nearest_labels[0])
+        print(most_common)
+        return most_common[0][0]
