@@ -1,5 +1,7 @@
 
+from typing import Counter
 import numpy as np
+from collections import Counter
 
 
 class Knn:
@@ -23,11 +25,9 @@ class Knn:
         # You must return an np array of shape 1 x k, each element must be the index of the neighbour so you can associate it with its class/label later.
         # You will need to calculate the distance and then sort, recalling the indexes. Do your research to find a method that allows this.
         # Remember that in self.model_x you have your list of examples
-        print(example)
-        distances = [self.euclidean_distance(x, example) for x in self.model_x]
+        distances = [self.euclidean_distance(x, example) for x in self.model_x.T]
         k_indices = np.argsort(distances)[:self.k]
-        print(k_indices.shape)
-        k_nerest_labels = [self.model_y[i] for i in k_indices]
+        k_indices = k_indices.reshape(1, self.k)
         return k_indices
 
     def fit(self, X, y):
@@ -47,5 +47,6 @@ class Knn:
         # Do your research to find numpy or python functions that allow to sort and count
         # In self.model_y you will have the list of the classes for examples in original dataset (self.model_x). self.model_y is of shape 1xm
         x = self.get_neighbors(example)
-        #labels = self.model_y[x]
+        k_nearest_labels = [self.model_y[0][i] for i in x]
+        print(k_nearest_labels)
         return 0
