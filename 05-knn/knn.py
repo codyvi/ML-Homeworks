@@ -16,7 +16,6 @@ class Knn:
         # The output should be a scalar
         distance = 0.0
         distance = np.sqrt(np.sum((example1-example2)**2))
-        print(distance)
         return distance
 
     def get_neighbors(self, example):
