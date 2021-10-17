@@ -4,7 +4,7 @@ import numpy as np
 from utils import get_one_hot, plot_decision_boundary, read_dataset, create_structure
 
 
-def run_for_dataset(dataset, hidden_layers_conf, examples, learning_rate=0.01, regularization_rate=0.01, epochs=100):
+def run_for_dataset(dataset, hidden_layers_conf, examples, learning_rate=0.01, regularization_rate=0.01, epochs=10):
     X, y = read_dataset(dataset)
     unique_classes = len(np.unique(y))
     y = get_one_hot(y, unique_classes)
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     ann = NeuralNetwork(input_neurons=2,
                         hidden_layers_conf=hidden_layers_conf,
                         output_neurons=2,
-                        learning_rate=0.5,
+                        learning_rate=0.25,
                         regularization_rate=0,
                         epochs=1)
     ann.theta = theta
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     dataset = './datasets/xor.csv'
     hidden_layers_conf = [6,6]
     reg_factor = 0.0
-    alpha=0.5
+    alpha=0.25
     epochs = 100000
     to_predict = []
     to_predict.append(np.array([[0, 0]]).T)
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     dataset = './datasets/blobs.csv'
     hidden_layers_conf = [2,5]
     reg_factor = 0.0
-    alpha=0.05
+    alpha=0.025
     epochs = 5000
     to_predict = []
     to_predict.append(np.array([[1, -9]]).T)
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     dataset = './datasets/moons.csv'
     hidden_layers_conf = [4,4,4]
     reg_factor = 0.0
-    alpha=0.1
+    alpha=0.05
     epochs = 500000
     to_predict = []
     to_predict.append(np.array([[-0.5, 0.5]]).T)
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     dataset = './datasets/circles.csv'
     hidden_layers_conf = [9,9,9]
     reg_factor = 0.0
-    alpha=0.05
+    alpha=0.025
     epochs = 500000
     to_predict = []
     to_predict.append(np.array([[-0.6, -0.85]]).T)
