@@ -48,6 +48,6 @@ class Knn:
         x = self.get_neighbors(example)
         k_nearest_labels = [self.model_y[0][i] for i in x]
         most_common = Counter(k_nearest_labels[0]).most_common(1)
-        print(k_nearest_labels[0])
-        print(most_common)
+        #print(k_nearest_labels[0])
+        #print(most_common)
         return most_common[0][0]
